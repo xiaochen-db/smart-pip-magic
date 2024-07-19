@@ -2,14 +2,16 @@ from IPython.core.magic import register_line_magic
 import subprocess
 from imports.analyze import (
     _get_dists,
-    _build_top_module_to_dep_map,
+    _build_top_module_to_dist_map,
     get_imported_modules,
 )
 
-from typing import Dict
+from typing import Dict, Any
+
+__all__ = ["smart_pip"]
 
 
-def _dict_diff(d1, d2) -> Dict[str, any]:
+def _dict_diff(d1, d2) -> Dict[str, Any]:
     keys1 = set(d1.keys())
     keys2 = set(d2.keys())
 
@@ -29,6 +31,8 @@ def _dict_diff(d1, d2) -> Dict[str, any]:
 
 @register_line_magic
 def smart_pip(line):
+    """Jupyter line magic %smart_pip"""
+
     dists_snapshot = _get_dists()
     ret = subprocess.run(["pip"] + line.split(" "))
     if ret.returncode:
@@ -37,7 +41,7 @@ def smart_pip(line):
     dists_delta = _dict_diff(dists_snapshot, _get_dists())
 
     if "added" in dists_delta:
-        affected_modules = _build_top_module_to_dep_map(dists_delta["added"]).keys()
+        affected_modules = _build_top_module_to_dist_map(dists_delta["added"]).keys()
         imported_modules = set(get_imported_modules())
         modules_to_reimport = imported_modules & affected_modules
         if modules_to_reimport:

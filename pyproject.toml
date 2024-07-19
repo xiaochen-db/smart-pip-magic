@@ -26,5 +26,5 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/xiaochen-db/enigma"
-Issues = "https://github.com/xiaochen-db/enigma/issues"
+Homepage = "https://github.com/xiaochen-db/smart-pip-magic"
+Issues = "https://github.com/xiaochen-db/smart-pip-magic/issues"
