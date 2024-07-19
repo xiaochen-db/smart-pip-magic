@@ -6,27 +6,8 @@ from imports.analyze import (
     get_imported_modules,
 )
 
-from typing import Dict, Any
 
 __all__ = ["smart_pip"]
-
-
-def _dict_diff(d1, d2) -> Dict[str, Any]:
-    keys1 = set(d1.keys())
-    keys2 = set(d2.keys())
-
-    added = keys2 - keys1
-    removed = keys1 - keys2
-    modified = {k: (d1[k], d2[k]) for k in keys1 & keys2 if d1[k] != d2[k]}
-
-    if not (added or removed or modified):
-        return {}
-
-    return {
-        "added": {k: d2[k] for k in added},
-        "removed": {k: d1[k] for k in removed},
-        "modified": modified,
-    }
 
 
 @register_line_magic
@@ -38,12 +19,11 @@ def smart_pip(line):
     if ret.returncode:
         print(f"Failed to run pip {line}. stdout: {ret.stdout} | stderr: {ret.stderr}")
 
-    dists_delta = _dict_diff(dists_snapshot, _get_dists())
-
-    if "added" in dists_delta:
-        affected_modules = _build_top_module_to_dist_map(dists_delta["added"]).keys()
+    added_dists = _get_dists() - dists_snapshot
+    if added_dists:
+        affected_modules = _build_top_module_to_dist_map(added_dists)
         imported_modules = set(get_imported_modules())
         modules_to_reimport = imported_modules & affected_modules
         if modules_to_reimport:
             return f'You should restart Python because the underlying files are updated for these dependencies: {",".join(modules_to_reimport)}'
-    return ""
+    return None

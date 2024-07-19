@@ -7,7 +7,7 @@ wheel.packages = ["src/imports", "src/smart_pip"]
 
 [project]
 name = "smart-pip-magic"
-version = "0.0.9"
+version = "0.0.10"
 authors = [
   { name="Xiao Chen", email="xiao.chen@databricks.com" },
 ]
