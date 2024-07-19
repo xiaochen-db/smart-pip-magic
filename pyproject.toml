@@ -3,7 +3,7 @@ requires = ["scikit-build-core"]
 build-backend = "scikit_build_core.build"
 
 [tool.scikit-build]
-wheel.packages = ["src/naive"]
+wheel.packages = ["src/naive", "src/import_machinery"]
 
 [project]
 name = "enigma-db"
@@ -17,6 +17,12 @@ requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
+]
+dependencies = ["ipython >= 6.0.0"]
+
+[project.optional-dependencies]
+dev = [
+    "ruff"
 ]
 
 [project.urls]
