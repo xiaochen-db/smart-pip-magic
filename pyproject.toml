@@ -3,11 +3,11 @@ requires = ["scikit-build-core"]
 build-backend = "scikit_build_core.build"
 
 [tool.scikit-build]
-wheel.packages = ["src/naive", "src/import_machinery"]
+wheel.packages = ["src/imports", "src/smart_pip"]
 
 [project]
 name = "smart-pip-magic"
-version = "0.0.1"
+version = "0.0.7"
 authors = [
   { name="Xiao Chen", email="xiao.chen@databricks.com" },
 ]

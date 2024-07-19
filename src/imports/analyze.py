@@ -21,7 +21,9 @@ def get_imported_depdencies() -> Dict[str, any]:
 
 
 def _get_dists() -> Dict[str, str]:
-    site_package_path = list(filter(lambda p: "site-packages" in p, sys.path))[0]
+    site_package_path = list(
+        filter(lambda p: "site-packages" in p or "dist-packages" in p, sys.path)
+    )[0]
     dist_info_folders = list(
         filter(lambda folder: "dist-info" in folder, os.listdir(site_package_path))
     )
