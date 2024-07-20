@@ -2,7 +2,7 @@ from IPython.core.magic import register_line_magic
 import subprocess
 from imports.analyze import (
     _get_dists,
-    _build_top_module_to_dist_map,
+    _build_module_to_dist_map,
     get_imported_modules,
 )
 
@@ -21,9 +21,9 @@ def smart_pip(line):
 
     added_dists = _get_dists() - dists_snapshot
     if added_dists:
-        affected_modules = _build_top_module_to_dist_map(added_dists).keys()
+        affected_modules = _build_module_to_dist_map(added_dists).keys()
         imported_modules = set(get_imported_modules())
         modules_to_reimport = imported_modules & affected_modules
         if modules_to_reimport:
-            return f'You should restart Python because the underlying files are updated for these dependencies: {",".join(modules_to_reimport)}'
+            return f'You should restart Python because the underlying files are updated for these modules: {",".join(modules_to_reimport)}'
     return None

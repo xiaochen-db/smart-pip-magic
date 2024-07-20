@@ -15,10 +15,10 @@ def get_imported_modules() -> List[str]:
 def get_imported_3rd_party_modules() -> Dict[str, Tuple[str, str]]:
     """Returns all 3rd-party imported modules and their associated (dist, version)"""
     result = {}
-    top_module_to_dist = _build_top_module_to_dist_map()
+    module_to_dist = _build_module_to_dist_map()
     for mod in get_imported_modules():
-        if mod in top_module_to_dist:
-            dist, version = top_module_to_dist[mod]
+        if mod in module_to_dist:
+            dist, version = module_to_dist[mod]
             result.update({mod: (dist, version)})
     return result
 
@@ -33,19 +33,26 @@ def _get_dists() -> Set[str]:
     )
 
 
-def _build_top_module_to_dist_map(
+def _build_module_to_dist_map(
     dists: Set[str] = None,
 ) -> Dict[str, Tuple[str, str]]:
-    """Returns a dict mapping top-level module names to a tuple of (dist name, version).
+    """Returns a dict mapping module names to a tuple of (dist name, version).
 
     dists -- the given dicts of the same format from _get_dists(). If not specified, we fetch from _get_dists()
     """
-    top_module_to_dep = {}
+    module_to_dep = {}
     for dist_and_version in dists or _get_dists():
-        dist, version = dist_and_version.split("-")
+        dist, _, version = dist_and_version.rpartition("-")
         for file_path in importlib.metadata.Distribution.from_name(dist).files:
             file_path = str(file_path)
-            if file_path.endswith(".py"):
-                top_module = file_path.split("/")[0]
-                top_module_to_dep.update({top_module: (dist, version)})
-    return top_module_to_dep
+            mod = None
+            if file_path.startswith(".."):
+                continue
+            if file_path.endswith("/__init__.py"):
+                mod = file_path.removesuffix("/__init__.py").replace("/", ".")
+            elif file_path.endswith(".py"):
+                mod = file_path.removesuffix(".py").replace("/", ".")
+            else:
+                continue
+            module_to_dep.update({mod: (dist, version)})
+    return module_to_dep
