@@ -7,17 +7,18 @@ from imports.analyze import (
 )
 
 
-__all__ = ["smart_pip"]
+__all__ = ["pip"]
 
 
 @register_line_magic
-def smart_pip(line):
+def pip(line):
     """Jupyter line magic %smart_pip"""
 
     dists_snapshot = _get_dists()
     ret = subprocess.run(["pip"] + line.split(" "))
     if ret.returncode:
         print(f"Failed to run pip {line}. stdout: {ret.stdout} | stderr: {ret.stderr}")
+        return
 
     added_dists = _get_dists() - dists_snapshot
     if added_dists:
@@ -25,5 +26,4 @@ def smart_pip(line):
         imported_modules = set(get_imported_modules())
         modules_to_reimport = imported_modules & affected_modules
         if modules_to_reimport:
-            return f'You should restart Python because the underlying files are updated for these modules: {",".join(modules_to_reimport)}'
-    return None
+            print(f'You should restart Python because the underlying files are updated for these imported modules: {", ".join(modules_to_reimport)}')

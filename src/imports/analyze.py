@@ -52,6 +52,8 @@ def _build_module_to_dist_map(
                 mod = file_path.removesuffix("/__init__.py").replace("/", ".")
             elif file_path.endswith(".py"):
                 mod = file_path.removesuffix(".py").replace("/", ".")
+            elif file_path.endswith(".so"):
+                mod = file_path.partition(".")[0]
             else:
                 continue
             module_to_dep.update({mod: (dist, version)})
