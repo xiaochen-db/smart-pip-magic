@@ -26,4 +26,6 @@ def pip(line):
         imported_modules = set(get_imported_modules())
         modules_to_reimport = imported_modules & affected_modules
         if modules_to_reimport:
-            print(f'You should restart Python because the underlying files are updated for these imported modules: {", ".join(modules_to_reimport)}')
+            print(
+                f'You should restart Python because the underlying files are updated for these imported modules: {", ".join(modules_to_reimport)}'
+            )
