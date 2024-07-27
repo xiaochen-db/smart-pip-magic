@@ -16,3 +16,15 @@ class TestSmartPip:
             "You should restart Python because the underlying files are updated for these imported modules: nothing"
             in captured.stdout
         )
+
+    def test_smart_pip_when_orignal_pip_nonexistent(self):
+        self
+        self.ip.run_cell("import smart_pip")
+        self.ip.run_line_magic("pip", "install nothing==0.0.2 -f data")
+        self.ip.run_cell("import nothing")
+        with capture_output() as captured:
+            self.ip.run_line_magic("pip", "install nothing==0.0.3 -f data")
+        assert (
+            "You should restart Python because the underlying files are updated for these imported modules: nothing"
+            in captured.stdout
+        )
