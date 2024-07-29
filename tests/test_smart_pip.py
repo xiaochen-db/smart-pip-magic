@@ -18,7 +18,6 @@ class TestSmartPip:
         )
 
     def test_smart_pip_when_orignal_pip_nonexistent(self):
-        self
         self.ip.run_cell("import smart_pip")
         self.ip.run_line_magic("pip", "install nothing==0.0.2 -f data")
         self.ip.run_cell("import nothing")

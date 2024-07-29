@@ -8,8 +8,13 @@ pip install smart-pip-magic
 ## Usage
 ```
 import smart_pip
-
 %pip install [opts] [list of package specifications]
 ```
 
 At the end of pip standard output, it will alert you if need to restart python and list all affected imported modules.
+
+## Testing
+```
+pip install .[dev]
+pytest
+```
