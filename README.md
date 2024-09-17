@@ -12,7 +12,7 @@ import smart_pip
 %pip install [opts] [list of package specifications]
 ```
 
-At the end of pip standard output, it will alert you if need to restart python and list all affected imported modules.
+**At the end of pip standard output, it will alert you if need to restart python and list all affected imported modules.**
 
 
 Add action hook to act on affected imported modules by the end of %pip install. If no such module is found, hooks are not invoked. 
